@@ -24,7 +24,9 @@ public class FileService {
     public Gif getFile(int id) {
         return fileRepository.findById(id).orElse(null);
     }
-
+    public Gif getFileByName(String name) {
+        return fileRepository.findByName(name);
+    }
     public List<Gif> getAllFiles() {
         return fileRepository.findAll();
     }

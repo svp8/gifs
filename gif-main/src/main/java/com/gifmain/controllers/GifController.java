@@ -19,21 +19,24 @@ public class GifController {
     GifService gifService;
 
     @PostMapping()
-    public ResponseEntity<?> uploadGif(@RequestBody Gif gif) {
+    public ResponseEntity<?> uploadGif(@RequestPart("gif") Gif gif,@RequestPart("file") MultipartFile file) {
         String message = "";
         try {
-            gifService.saveGif(gif);
+            gifService.saveGif(gif,file);
 
             message =String.format("The file %s was successfully uploaded ",gif.getName());
             return ResponseEntity.status(HttpStatus.CREATED).body(message);
         } catch (Exception e) {
+            System.out.println(e);
             message = "Could not upload the file: " + gif.getName() + "!";
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
         }
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getFile(@PathVariable int id) {
         Gif gif=gifService.getGif(id);
+
         if(gif==null) return ResponseEntity.badRequest().body("No such file");
         return ResponseEntity.ok()
                 .body(gif);

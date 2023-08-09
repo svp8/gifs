@@ -28,5 +28,7 @@ public class Gif {
     private int views;
     @OneToMany(mappedBy = "gif")
     private List<Tag> tags = new ArrayList<>();
+    @Transient
+    private String url;
 
 }
