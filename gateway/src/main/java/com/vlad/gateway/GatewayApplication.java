@@ -1,16 +1,15 @@
-package com.gifs;
+package com.vlad.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-
 @SpringBootApplication
 @EnableDiscoveryClient
-public class GifsApplication {
+public class GatewayApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GifsApplication.class, args);
+		SpringApplication.run(GatewayApplication.class, args);
 	}
 
 }

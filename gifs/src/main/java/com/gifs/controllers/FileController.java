@@ -57,8 +57,7 @@ public class FileController {
         List<Gif> fileDB = fileService.getAllFiles();
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=324" )
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" )
                 .body(fileDB);
     }
     @DeleteMapping("/delete/{id}")

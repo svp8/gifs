@@ -31,14 +31,14 @@ public class GifService {
     @Autowired
     TagRepository tagRepository;
     @Autowired
-    WebClient webClient;
+    WebClient.Builder webClient;
 
     public Gif saveGif(Gif gif, MultipartFile file) throws IOException {
         Gif ngif=gifRepository.save(gif);
         MultipartFile multipartFile = new MockMultipartFile( gif.getName()+"~"+ngif.getId(),gif.getName()+"~"+ngif.getId(),file.getContentType(), file.getInputStream());
         MultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
         multipartData.add("file", multipartFile.getResource());
-        String status = webClient.post().uri("/upload")
+        String status = webClient.build().post().uri("/upload")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData(multipartData)).retrieve().bodyToMono(String.class).block();
         System.out.println(status);
