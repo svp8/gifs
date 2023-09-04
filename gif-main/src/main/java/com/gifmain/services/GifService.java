@@ -5,13 +5,9 @@ import com.gifmain.models.Tag;
 import com.gifmain.repositories.GifRepository;
 
 import com.gifmain.repositories.TagRepository;
-import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -19,7 +15,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,6 +27,12 @@ public class GifService {
     TagRepository tagRepository;
     @Autowired
     WebClient.Builder webClient;
+
+    private final KafkaTemplate<String,Gif> kafkaTemplate;
+
+    public GifService(KafkaTemplate<String, Gif> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
 
     public Gif saveGif(Gif gif, MultipartFile file) throws IOException {
         Gif ngif=gifRepository.save(gif);
@@ -48,6 +49,7 @@ public class GifService {
                 tagRepository.save(t);
             }
         }
+        kafkaTemplate.send("notificationTopic",gif);
 
         return gif;
     }
